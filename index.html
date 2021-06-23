@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link href="css/main.css" rel="stylesheet">
+
+    <script src="js/p5.min.js"></script>
+    <script src="js/Nemo.js"></script>
+    <script src="js/gsap/TweenMax.js"></script>
+</head>
+
+<body onload="init()">
+    <div>
+        <svg id="svg" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs>
+                <linearGradient x1="50%" y1="1.91699783%" x2="50%" y2="100%" id="sun-beam">
+                    <stop stop-color="#000" stop-opacity="0.045" offset="0%"></stop>
+                    <stop stop-color="#000" stop-opacity="0" offset="100%"></stop>
+                </linearGradient>
+                <radialGradient cx="50%" cy="50%" r="80%" fx="50%" fy="50%" id="sun-sky">
+                        <stop stop-color="#F79D0B" offset="0%"></stop>
+                        <stop stop-color="#CF6400" offset="100%"></stop>
+                </radialGradient>
+                <linearGradient x1="50%" y1="0%" x2="50%" y2="100%" id="sea">
+                    <stop stop-color="#55B3EE" offset="0%"></stop>
+                    <stop stop-color="#002A48" offset="100%"></stop>
+                </linearGradient>
+            </defs>
+            <style>
+                @import url('https://fonts.googleapis.com/css?family=Bungee+Hairline|Monoton|Ubuntu+Mono');
+                text {
+                    font-size: 33px;
+                    font-family: "Bungee Hairline";
+                    text-decoration: underline;
+                }
+            </style>
+            <rect id="water-bg" x="0" y="0" width="1000" height="1000" fill="url(#sea)"></rect>
+            <!--rect id="sky" x="0" y="0" width="1000" height="1000" fill="url(#sun-sky)"></rect-->
+            <text opacity=".5" id="title" class="large" fill="#FFFFFF" text-anchor="middle" x="500" y="500">WEB-ANIMATION 101</text>
+        </svg>
+    </div>
+
+</body>
+<script>
+
+    var myReq;
+    let svg = document.getElementById('svg');
+    let bg = document.getElementById('water-bg');
+    let bg_sky = document.getElementById('sky');
+    let title = document.getElementById('title');
+    let w = window.innerWidth;
+    let h = window.innerHeight;
+    let fish = [];
+    let numberOfFish = 30;
+    let ns = 'http://www.w3.org/2000/svg';
+    let time = 0;
+
+    function init() {
+        const location = createVector(5,5);
+        console.log('init');
+        noLoop();
+        initSVGProps();
+        initTitle();
+        initBeams();
+        initBG();
+        noiseSeed(100);
+        spawnFish();
+        draw(0);
+    }
+
+    function initSVGProps() {
+        svg.setAttribute("width", w);
+        svg.setAttribute("height", h);
+        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+    }
+
+    function initTitle() {
+        title.setAttribute("x", w / 2);
+        title.setAttribute("y", h / 2 - 30);
+    }
+
+    function initBG() {
+        bg.setAttribute("width", w);
+        bg.setAttribute("height", h);
+    }
+
+    function initBeams() {
+        for (var i = 0; i < 10; i++) {
+            const beamWidth = Math.random() * 500 + 100;
+            const beam = this.buildBeam(`b${i}`, Math.random() * (w - beamWidth), beamWidth);
+            svg.appendChild(beam);
+            const duration = Math.round(Math.random()* 2  + 2);
+            const del = Math.random() * 30;
+            TweenMax.to(`#b${i}`, duration, { delay: del, repeat: -1, yoyo: true, opacity: 0 });
+        }
+    }
+
+    function buildBeam(id, xPos, width) {
+        const beam = document.createElementNS(ns, "polygon");
+        beam.setAttribute('id', id);
+        const skew = 200;
+        beam.setAttribute("points", `${xPos} 0 ${xPos + width} 0 ${xPos + width + skew} ${h} ${xPos + skew} ${h}`);
+        beam.setAttribute("fill", "url(#sun-beam");
+        beam.setAttribute("opacity", `${(Math.random() * .7) + .3}`);
+
+        return beam;
+    }
+
+    function spawnFish() {
+        const fishHolder = document.createElementNS(ns, 'g');
+        fishHolder.setAttribute('id', "fish-holder");
+        svg.appendChild(fishHolder);
+
+        for (let i = 0; i < numberOfFish; i++) {
+
+            const g = document.createElementNS(ns, 'g');
+            g.setAttribute('id', "fish_" + i);
+            fishHolder.appendChild(g);
+
+            const xPos = ((Math.random() * w) - w / 2) + w / 2 - 100;
+            const yPos = h / 2 + (Math.random() * .8 * h) - (h / 2 * .8) - 50;//((Math.random() * h * .8) - h / 2 * .8) + h / 2 * .8;
+            const n = new Nemo(xPos, yPos, w, h, g);
+
+            fish.push(n);
+            n.initProps();
+        }
+    }
+
+    function draw(e) {
+        time += .005;
+        myReq = requestAnimationFrame(draw);
+        for (let i = 0; i < numberOfFish; i++) {
+            fish[i].update(time);
+        }
+    }
+
+
+
+
+</script>
+
+</html>
