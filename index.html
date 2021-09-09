@@ -26,16 +26,17 @@
                     <stop stop-color="#002A48" offset="100%"></stop>
                 </linearGradient>
             </defs>
-            <style>
+            <!-- <style>
                 @import url('https://fonts.googleapis.com/css?family=Bungee+Hairline|Monoton|Ubuntu+Mono');
                 text {
                     font-size: 33px;
                     font-family: "Bungee Hairline";
                     text-decoration: underline;
                 }
-            </style>
+            </style> -->
             <rect id="water-bg" x="0" y="0" width="1000" height="1000" fill="url(#sea)"></rect>
             <!--rect id="sky" x="0" y="0" width="1000" height="1000" fill="url(#sun-sky)"></rect-->
+            <!-- <text opacity=".5" id="title" class="large" fill="#FFFFFF" text-anchor="middle" x="500" y="500">WEB-ANIMATION 101</text> -->
         </svg>
     </div>
 
@@ -46,7 +47,7 @@
     let svg = document.getElementById('svg');
     let bg = document.getElementById('water-bg');
     let bg_sky = document.getElementById('sky');
-    let title = document.getElementById('title');
+    //let title = document.getElementById('title');
     let w = window.innerWidth;
     let h = window.innerHeight;
     let fish = [];
@@ -59,7 +60,7 @@
         console.log('init');
         noLoop();
         initSVGProps();
-        initTitle();
+        // initTitle();
         initBeams();
         initBG();
         noiseSeed(100);
@@ -74,8 +75,8 @@
     }
 
     function initTitle() {
-        title.setAttribute("x", w / 2);
-        title.setAttribute("y", h / 2 - 30);
+        // title.setAttribute("x", w / 2);
+        // title.setAttribute("y", h / 2 - 30);
     }
 
     function initBG() {
